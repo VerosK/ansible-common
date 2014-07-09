@@ -1,0 +1,8 @@
+---
+common:
+  packages: [ libselinux-python, ntp ]
+  ntp_service: ntpd
+  ntp_config: /etc/ntp.conf
+
+  # confirm, that OS is supported
+  supported_os: True

@@ -1,0 +1,24 @@
+---
+# OS specific package installations
+- name: add OS specific variables
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Warn if OS is unsupported
+  fail: msg="OS {{ ansible_os_family }} is unsupported"
+  when: not common.supported_os
+
+- include: centos.yml
+  when: ansible_os_family == "RedHat"
+
+- include: debian.yml
+  when: ansible_os_family == "Debian"
+
+# Common again
+- name: Configure ntp file
+  template: src=ntp.conf.j2 dest={{ common.ntp_config }}
+  tags: ntp
+  notify: restart ntp
+
+- name: Start the ntp service
+  service: name={{ common.ntp_service }} state=started enabled=true
+  tags: ntp
