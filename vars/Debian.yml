@@ -1,8 +1,7 @@
 ---
 common:
   packages: [ openntpd ]
-  ntp_service: openntpd
+  services: [ openntpd ]
   ntp_config: /etc/openntpd
 
-  # confirm OS is supported
   supported_os: True

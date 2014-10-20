@@ -1,10 +1,16 @@
 ---
-# OS specific package installations
-- name: add OS specific variables
-  include_vars: "{{ ansible_os_family }}.yml"
+- name: Add OS specific variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+      - "{{ ansible_distribution }}-{{ ansible_distribution_major_version }}.yml"
+      - "{{ ansible_distribution }}.yml"
+      - "{{ ansible_os_family }}.yml"
+      paths:
+      - ../vars
 
 - name: Warn if OS is unsupported
-  fail: msg="OS {{ ansible_os_family }} is unsupported"
+  fail: msg="OS {{ ansible_distribution }} {{ ansible_distribution_major_version }} is unsupported"
   when: not common.supported_os
 
 - include: centos.yml
@@ -19,6 +25,6 @@
   tags: ntp
   notify: restart ntp
 
-- name: Start the ntp service
-  service: name={{ common.ntp_service }} state=started enabled=true
-  tags: ntp
+- name: Start  service
+  service: name={{ item }} state=started enabled=true
+  with_items: common.services

@@ -1,0 +1,4 @@
+---
+common:
+  # CentOS 5 is not supported yet
+  supported_os: False
